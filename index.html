@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Valentine Surprise ❤️</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ================= MUSIC ================= -->
+  <button id="musicBtn" class="music-btn">🎵</button>
+
+  <audio id="music">
+    <source src="BeautifulDay.mp3" type="audio/mpeg">
+  </audio>
+
+
+
+  <!-- ================= SCREEN 1 ================= -->
+  <div class="box fade" id="intro">
+    <h1>Happy Valentine's Day ❤️</h1>
+    <div style="font-size:120px;">❤️</div>
+    <button id="surpriseBtn">Click for a Surprise 💝</button>
+    <p>Forever grateful to have you ❤️</p>
+  </div>
+
+
+
+  <!-- ================= SCREEN 2 ================= -->
+  <div class="box fade hidden" id="main">
+
+    <h1 class="name-glow">Prachii ❤️</h1>
+    <h2>Will you be my Valentine?</h2>
+
+    <button id="yes">Yes 💖</button>
+    <button id="no">No</button>
+
+    <p id="countdown"></p>
+  </div>
+
+
+
+  <!-- ================= SCREEN 3 ================= -->
+  <div class="box fade hidden" id="final">
+
+    <h1>Yayyy 🥰</h1>
+
+    <p id="typing"></p>
+
+    <img src="images/photo1.jpg" alt="memory">
+
+    <video id="gifVid" src="gif.mp4" autoplay muted loop playsinline
+      style="width:260px;border-radius:18px;margin-top:15px;"></video>
+
+    <p>Forever yours ❤️</p>
+  </div>
+
+
+
+  <!-- ================= LIB ================= -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
+  <script>
+
+    /* ================= FLOATING MIX BACKGROUND =================
+       Hearts + Roses + Flowers (AUTO GENERATED)
+    =========================================================== */
+
+    const items = ["❤️", "🌹", "🌸", "💖", "🌺", "💗"];
+
+    function createFloat() {
+      const el = document.createElement("div");
+
+      el.innerText = items[Math.floor(Math.random() * items.length)];
+      el.style.position = "fixed";
+
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.bottom = "-40px";
+
+      el.style.fontSize = (16 + Math.random() * 20) + "px";
+      el.style.opacity = 0.5 + Math.random() * 0.5;
+
+      el.style.animation = `floatUp ${6 + Math.random() * 6}s linear forwards`;
+
+      el.style.pointerEvents = "none";
+      el.style.zIndex = "0";
+
+      document.body.appendChild(el);
+
+      setTimeout(() => el.remove(), 12000);
+    }
+
+    // continuously spawn
+    setInterval(createFloat, 300);
+
+
+
+    /* ================= ELEMENTS ================= */
+    const intro = document.getElementById("intro");
+    const surpriseBtn = document.getElementById("surpriseBtn");
+
+    const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
+
+    const main = document.getElementById("main");
+    const final = document.getElementById("final");
+
+    const typing = document.getElementById("typing");
+    const music = document.getElementById("music");
+    const musicBtn = document.getElementById("musicBtn");
+    const count = document.getElementById("countdown");
+
+
+
+    /* ================= INTRO → PROPOSAL ================= */
+    surpriseBtn.onclick = () => {
+      intro.classList.add("hidden");
+      main.classList.remove("hidden");
+    };
+
+
+
+    /* ================= MUSIC LOOP ================= */
+    const START_TIME = 86;
+
+    window.addEventListener("click", () => {
+      music.currentTime = START_TIME;
+      music.play();
+    }, { once: true });
+
+    musicBtn.onclick = () => {
+      music.paused ? music.play() : music.pause();
+    };
+
+    music.addEventListener("timeupdate", () => {
+      if (music.currentTime >= music.duration - 0.3) {
+        music.currentTime = START_TIME;
+        music.play();
+      }
+    });
+
+
+
+    /* ================= NO BUTTON RUN ================= */
+    const texts = [
+      "Are you sure? 😢",
+      "Really sure? 🥺",
+      "Still no? 😭",
+      "Please say yes 💕",
+      "Don't break my heart 💔",
+      "I'll bring you chocolates 🍫",
+      "Only YES works 😌",
+      "Catch me if you can 😜",
+      "I bet you can't click me! 😎",
+      "Think about our memories 🥰",
+      "Still Nooooooooooo... ⏳",
+      "You're so rude! 😤",
+      "You were so close to clicking yes! 😝",
+      "Come on, just one click! 🙏",
+      "I'll bring you flowers 🌹",
+      "I'll give you butterflies 🦋",
+      "Hey..... Go for yes!😁",
+      
+    ];
+
+    let t = 0;
+
+    noBtn.addEventListener("mouseover", () => {
+
+      if (t < texts.length) {
+        noBtn.innerText = texts[t++];
+      }
+
+      const box = main.getBoundingClientRect();
+
+      const x = Math.random() * (box.width - 150);
+      const y = Math.random() * (box.height - 80);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    });
+
+
+
+    /* ================= HEART BURST ================= */
+    function heartBurst(x, y) {
+      for (let i = 0; i < 25; i++) {
+        const h = document.createElement("div");
+        h.className = "heart-burst";
+        h.innerText = "❤️";
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 80 + Math.random() * 120;
+
+        h.style.left = x + "px";
+        h.style.top = y + "px";
+
+        h.style.setProperty("--x", Math.cos(angle) * dist + "px");
+        h.style.setProperty("--y", Math.sin(angle) * dist + "px");
+
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 1400);
+      }
+    }
+
+
+
+    /* ================= YES CLICK ================= */
+    yesBtn.addEventListener("click", () => {
+
+      const rect = yesBtn.getBoundingClientRect();
+      heartBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      main.classList.add("hidden");
+      final.classList.remove("hidden");
+
+      confetti({
+        particleCount: 350,
+        spread: 140,
+        origin: { y: 0.6 }
+      });
+
+      startTyping();
+    });
+
+
+
+    /* ================= TYPEWRITER ================= */
+    function startTyping() {
+
+      const msg = [
+        "You walked into my life like morning light ☀️",
+        "And suddenly everything felt right 💕",
+        "Your smile heals every little fear 🥰",
+        "With you, my world feels warm and clear ❤️",
+        "Every heartbeat whispers your name 💓",
+        "My love for you will stay the same 💍",
+        "Through every season, come what may 🌹",
+        "Forever yours — today, tomorrow, always 💖"
+      ];
+
+      let line = 0;
+      let char = 0;
+
+      function type() {
+
+        if (line < msg.length) {
+
+          if (char < msg[line].length) {
+            typing.innerHTML += msg[line][char];
+            char++;
+            setTimeout(type, 30);
+          }
+          else {
+            typing.innerHTML += "<br>";
+            line++;
+            char = 0;
+            setTimeout(type, 400);
+          }
+        }
+      }
+
+      type();
+    }
+
+
+
+    /* ================= COUNTDOWN ================= */
+    const valentine = new Date("Feb 14, 2026 00:00:00").getTime();
+
+    setInterval(() => {
+      const now = new Date().getTime();
+      const gap = valentine - now;
+
+      const d = Math.floor(gap / (1000 * 60 * 60 * 24));
+      const h = Math.floor((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((gap % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((gap % (1000 * 60)) / 1000);
+
+      count.innerText = `Valentine in: ${d}d ${h}h ${m}m ${s}s`;
+    }, 1000);
+
+  </script>
+
+</body>
+</html>
